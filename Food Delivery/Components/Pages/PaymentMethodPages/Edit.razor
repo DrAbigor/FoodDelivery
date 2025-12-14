@@ -1,0 +1,129 @@
+﻿@page "/paymentmethods/edit"
+@using Microsoft.EntityFrameworkCore
+@using FoodDelivery.Domain
+@inject IDbContextFactory<Food_Delivery.Data.Food_DeliveryContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>PaymentMethod</h2>
+<hr />
+@if (PaymentMethod is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="PaymentMethod" OnValidSubmit="UpdatePaymentMethod" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="PaymentMethod.Id" value="@PaymentMethod.Id" />
+                <div class="mb-3">
+                    <label for="cardtype" class="form-label">CardType:</label>
+                    <InputText id="cardtype" @bind-Value="PaymentMethod.CardType" class="form-control" />
+                    <ValidationMessage For="() => PaymentMethod.CardType" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="expirymonth" class="form-label">ExpiryMonth:</label>
+                    <InputNumber id="expirymonth" @bind-Value="PaymentMethod.ExpiryMonth" class="form-control" />
+                    <ValidationMessage For="() => PaymentMethod.ExpiryMonth" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="expiryyear" class="form-label">ExpiryYear:</label>
+                    <InputNumber id="expiryyear" @bind-Value="PaymentMethod.ExpiryYear" class="form-control" />
+                    <ValidationMessage For="() => PaymentMethod.ExpiryYear" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="cardholdername" class="form-label">CardHolderName:</label>
+                    <InputText id="cardholdername" @bind-Value="PaymentMethod.CardHolderName" class="form-control" />
+                    <ValidationMessage For="() => PaymentMethod.CardHolderName" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="userid" class="form-label">UserId:</label>
+                    <InputNumber id="userid" @bind-Value="PaymentMethod.UserId" class="form-control" />
+                    <ValidationMessage For="() => PaymentMethod.UserId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="datecreated" class="form-label">DateCreated:</label>
+                    <InputDate id="datecreated" @bind-Value="PaymentMethod.DateCreated" class="form-control" />
+                    <ValidationMessage For="() => PaymentMethod.DateCreated" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="dateupdated" class="form-label">DateUpdated:</label>
+                    <InputDate id="dateupdated" @bind-Value="PaymentMethod.DateUpdated" class="form-control" />
+                    <ValidationMessage For="() => PaymentMethod.DateUpdated" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="createdby" class="form-label">CreatedBy:</label>
+                    <InputText id="createdby" @bind-Value="PaymentMethod.CreatedBy" class="form-control" />
+                    <ValidationMessage For="() => PaymentMethod.CreatedBy" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="updatedby" class="form-label">UpdatedBy:</label>
+                    <InputText id="updatedby" @bind-Value="PaymentMethod.UpdatedBy" class="form-control" />
+                    <ValidationMessage For="() => PaymentMethod.UpdatedBy" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/paymentmethods">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private PaymentMethod? PaymentMethod { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        PaymentMethod ??= await context.PaymentMethod.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (PaymentMethod is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdatePaymentMethod()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(PaymentMethod!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!PaymentMethodExists(PaymentMethod!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/paymentmethods");
+    }
+
+    private bool PaymentMethodExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.PaymentMethod.Any(e => e.Id == id);
+    }
+}

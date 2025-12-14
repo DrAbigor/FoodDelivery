@@ -1,0 +1,60 @@
+﻿@page "/groupordermembers/details"
+@using Microsoft.EntityFrameworkCore
+@using FoodDelivery.Domain
+@inject IDbContextFactory<Food_Delivery.Data.Food_DeliveryContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>GroupOrderMember</h2>
+    <hr />
+    @if (groupordermember is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">JoinTime</dt>
+            <dd class="col-sm-10">@groupordermember.JoinTime</dd>
+            <dt class="col-sm-2">Status</dt>
+            <dd class="col-sm-10">@groupordermember.Status</dd>
+            <dt class="col-sm-2">GroupOrderId</dt>
+            <dd class="col-sm-10">@groupordermember.GroupOrderId</dd>
+            <dt class="col-sm-2">UserId</dt>
+            <dd class="col-sm-10">@groupordermember.UserId</dd>
+            <dt class="col-sm-2">DateCreated</dt>
+            <dd class="col-sm-10">@groupordermember.DateCreated</dd>
+            <dt class="col-sm-2">DateUpdated</dt>
+            <dd class="col-sm-10">@groupordermember.DateUpdated</dd>
+            <dt class="col-sm-2">CreatedBy</dt>
+            <dd class="col-sm-10">@groupordermember.CreatedBy</dd>
+            <dt class="col-sm-2">UpdatedBy</dt>
+            <dd class="col-sm-10">@groupordermember.UpdatedBy</dd>
+        </dl>
+        <div>
+            <a href="@($"/groupordermembers/edit?id={groupordermember.Id}")">Edit</a> |
+            <a href="@($"/groupordermembers")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private GroupOrderMember? groupordermember;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        groupordermember = await context.GroupOrderMember.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (groupordermember is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

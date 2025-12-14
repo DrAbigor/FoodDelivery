@@ -1,0 +1,84 @@
+﻿@page "/paymentmethods/create"
+@using Microsoft.EntityFrameworkCore
+@using FoodDelivery.Domain
+@inject IDbContextFactory<Food_Delivery.Data.Food_DeliveryContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>PaymentMethod</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="PaymentMethod" OnValidSubmit="AddPaymentMethod" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="cardtype" class="form-label">CardType:</label> 
+                <InputText id="cardtype" @bind-Value="PaymentMethod.CardType" class="form-control" /> 
+                <ValidationMessage For="() => PaymentMethod.CardType" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="expirymonth" class="form-label">ExpiryMonth:</label> 
+                <InputNumber id="expirymonth" @bind-Value="PaymentMethod.ExpiryMonth" class="form-control" /> 
+                <ValidationMessage For="() => PaymentMethod.ExpiryMonth" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="expiryyear" class="form-label">ExpiryYear:</label> 
+                <InputNumber id="expiryyear" @bind-Value="PaymentMethod.ExpiryYear" class="form-control" /> 
+                <ValidationMessage For="() => PaymentMethod.ExpiryYear" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="cardholdername" class="form-label">CardHolderName:</label> 
+                <InputText id="cardholdername" @bind-Value="PaymentMethod.CardHolderName" class="form-control" /> 
+                <ValidationMessage For="() => PaymentMethod.CardHolderName" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="userid" class="form-label">UserId:</label> 
+                <InputNumber id="userid" @bind-Value="PaymentMethod.UserId" class="form-control" /> 
+                <ValidationMessage For="() => PaymentMethod.UserId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="datecreated" class="form-label">DateCreated:</label> 
+                <InputDate id="datecreated" @bind-Value="PaymentMethod.DateCreated" class="form-control" /> 
+                <ValidationMessage For="() => PaymentMethod.DateCreated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="dateupdated" class="form-label">DateUpdated:</label> 
+                <InputDate id="dateupdated" @bind-Value="PaymentMethod.DateUpdated" class="form-control" /> 
+                <ValidationMessage For="() => PaymentMethod.DateUpdated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="createdby" class="form-label">CreatedBy:</label> 
+                <InputText id="createdby" @bind-Value="PaymentMethod.CreatedBy" class="form-control" /> 
+                <ValidationMessage For="() => PaymentMethod.CreatedBy" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="updatedby" class="form-label">UpdatedBy:</label> 
+                <InputText id="updatedby" @bind-Value="PaymentMethod.UpdatedBy" class="form-control" /> 
+                <ValidationMessage For="() => PaymentMethod.UpdatedBy" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/paymentmethods">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private PaymentMethod PaymentMethod { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddPaymentMethod()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.PaymentMethod.Add(PaymentMethod);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/paymentmethods");
+    }
+}

@@ -1,0 +1,64 @@
+﻿@page "/addresses/details"
+@using Microsoft.EntityFrameworkCore
+@using FoodDelivery.Domain
+@inject IDbContextFactory<Food_Delivery.Data.Food_DeliveryContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Address</h2>
+    <hr />
+    @if (address is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Block</dt>
+            <dd class="col-sm-10">@address.Block</dd>
+            <dt class="col-sm-2">UnitNumber</dt>
+            <dd class="col-sm-10">@address.UnitNumber</dd>
+            <dt class="col-sm-2">Street</dt>
+            <dd class="col-sm-10">@address.Street</dd>
+            <dt class="col-sm-2">PostalCode</dt>
+            <dd class="col-sm-10">@address.PostalCode</dd>
+            <dt class="col-sm-2">City</dt>
+            <dd class="col-sm-10">@address.City</dd>
+            <dt class="col-sm-2">UserId</dt>
+            <dd class="col-sm-10">@address.UserId</dd>
+            <dt class="col-sm-2">DateCreated</dt>
+            <dd class="col-sm-10">@address.DateCreated</dd>
+            <dt class="col-sm-2">DateUpdated</dt>
+            <dd class="col-sm-10">@address.DateUpdated</dd>
+            <dt class="col-sm-2">CreatedBy</dt>
+            <dd class="col-sm-10">@address.CreatedBy</dd>
+            <dt class="col-sm-2">UpdatedBy</dt>
+            <dd class="col-sm-10">@address.UpdatedBy</dd>
+        </dl>
+        <div>
+            <a href="@($"/addresses/edit?id={address.Id}")">Edit</a> |
+            <a href="@($"/addresses")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Address? address;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        address = await context.Address.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (address is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

@@ -1,0 +1,56 @@
+﻿@page "/malls/details"
+@using Microsoft.EntityFrameworkCore
+@using FoodDelivery.Domain
+@inject IDbContextFactory<Food_Delivery.Data.Food_DeliveryContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Mall</h2>
+    <hr />
+    @if (mall is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">MallName</dt>
+            <dd class="col-sm-10">@mall.MallName</dd>
+            <dt class="col-sm-2">Address</dt>
+            <dd class="col-sm-10">@mall.Address</dd>
+            <dt class="col-sm-2">DateCreated</dt>
+            <dd class="col-sm-10">@mall.DateCreated</dd>
+            <dt class="col-sm-2">DateUpdated</dt>
+            <dd class="col-sm-10">@mall.DateUpdated</dd>
+            <dt class="col-sm-2">CreatedBy</dt>
+            <dd class="col-sm-10">@mall.CreatedBy</dd>
+            <dt class="col-sm-2">UpdatedBy</dt>
+            <dd class="col-sm-10">@mall.UpdatedBy</dd>
+        </dl>
+        <div>
+            <a href="@($"/malls/edit?id={mall.Id}")">Edit</a> |
+            <a href="@($"/malls")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Mall? mall;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        mall = await context.Mall.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (mall is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

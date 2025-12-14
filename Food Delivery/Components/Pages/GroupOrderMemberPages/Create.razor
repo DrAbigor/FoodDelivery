@@ -1,0 +1,79 @@
+﻿@page "/groupordermembers/create"
+@using Microsoft.EntityFrameworkCore
+@using FoodDelivery.Domain
+@inject IDbContextFactory<Food_Delivery.Data.Food_DeliveryContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>GroupOrderMember</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="GroupOrderMember" OnValidSubmit="AddGroupOrderMember" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="jointime" class="form-label">JoinTime:</label> 
+                <InputDate id="jointime" @bind-Value="GroupOrderMember.JoinTime" class="form-control" /> 
+                <ValidationMessage For="() => GroupOrderMember.JoinTime" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="status" class="form-label">Status:</label> 
+                <InputText id="status" @bind-Value="GroupOrderMember.Status" class="form-control" /> 
+                <ValidationMessage For="() => GroupOrderMember.Status" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="grouporderid" class="form-label">GroupOrderId:</label> 
+                <InputNumber id="grouporderid" @bind-Value="GroupOrderMember.GroupOrderId" class="form-control" /> 
+                <ValidationMessage For="() => GroupOrderMember.GroupOrderId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="userid" class="form-label">UserId:</label> 
+                <InputNumber id="userid" @bind-Value="GroupOrderMember.UserId" class="form-control" /> 
+                <ValidationMessage For="() => GroupOrderMember.UserId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="datecreated" class="form-label">DateCreated:</label> 
+                <InputDate id="datecreated" @bind-Value="GroupOrderMember.DateCreated" class="form-control" /> 
+                <ValidationMessage For="() => GroupOrderMember.DateCreated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="dateupdated" class="form-label">DateUpdated:</label> 
+                <InputDate id="dateupdated" @bind-Value="GroupOrderMember.DateUpdated" class="form-control" /> 
+                <ValidationMessage For="() => GroupOrderMember.DateUpdated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="createdby" class="form-label">CreatedBy:</label> 
+                <InputText id="createdby" @bind-Value="GroupOrderMember.CreatedBy" class="form-control" /> 
+                <ValidationMessage For="() => GroupOrderMember.CreatedBy" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="updatedby" class="form-label">UpdatedBy:</label> 
+                <InputText id="updatedby" @bind-Value="GroupOrderMember.UpdatedBy" class="form-control" /> 
+                <ValidationMessage For="() => GroupOrderMember.UpdatedBy" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/groupordermembers">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private GroupOrderMember GroupOrderMember { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddGroupOrderMember()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.GroupOrderMember.Add(GroupOrderMember);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/groupordermembers");
+    }
+}

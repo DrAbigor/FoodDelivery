@@ -1,0 +1,62 @@
+﻿@page "/menuitems/details"
+@using Microsoft.EntityFrameworkCore
+@using FoodDelivery.Domain
+@inject IDbContextFactory<Food_Delivery.Data.Food_DeliveryContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>MenuItem</h2>
+    <hr />
+    @if (menuitem is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">ItemName</dt>
+            <dd class="col-sm-10">@menuitem.ItemName</dd>
+            <dt class="col-sm-2">Price</dt>
+            <dd class="col-sm-10">@menuitem.Price</dd>
+            <dt class="col-sm-2">Description</dt>
+            <dd class="col-sm-10">@menuitem.Description</dd>
+            <dt class="col-sm-2">NutritionInfo</dt>
+            <dd class="col-sm-10">@menuitem.NutritionInfo</dd>
+            <dt class="col-sm-2">RestaurantId</dt>
+            <dd class="col-sm-10">@menuitem.RestaurantId</dd>
+            <dt class="col-sm-2">DateCreated</dt>
+            <dd class="col-sm-10">@menuitem.DateCreated</dd>
+            <dt class="col-sm-2">DateUpdated</dt>
+            <dd class="col-sm-10">@menuitem.DateUpdated</dd>
+            <dt class="col-sm-2">CreatedBy</dt>
+            <dd class="col-sm-10">@menuitem.CreatedBy</dd>
+            <dt class="col-sm-2">UpdatedBy</dt>
+            <dd class="col-sm-10">@menuitem.UpdatedBy</dd>
+        </dl>
+        <div>
+            <a href="@($"/menuitems/edit?id={menuitem.Id}")">Edit</a> |
+            <a href="@($"/menuitems")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private MenuItem? menuitem;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        menuitem = await context.MenuItem.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (menuitem is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

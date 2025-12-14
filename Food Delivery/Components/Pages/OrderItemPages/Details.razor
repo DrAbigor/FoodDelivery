@@ -1,0 +1,62 @@
+﻿@page "/orderitems/details"
+@using Microsoft.EntityFrameworkCore
+@using FoodDelivery.Domain
+@inject IDbContextFactory<Food_Delivery.Data.Food_DeliveryContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>OrderItem</h2>
+    <hr />
+    @if (orderitem is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Quantity</dt>
+            <dd class="col-sm-10">@orderitem.Quantity</dd>
+            <dt class="col-sm-2">ItemPrice</dt>
+            <dd class="col-sm-10">@orderitem.ItemPrice</dd>
+            <dt class="col-sm-2">Subtotal</dt>
+            <dd class="col-sm-10">@orderitem.Subtotal</dd>
+            <dt class="col-sm-2">ItemId</dt>
+            <dd class="col-sm-10">@orderitem.ItemId</dd>
+            <dt class="col-sm-2">OrderId</dt>
+            <dd class="col-sm-10">@orderitem.OrderId</dd>
+            <dt class="col-sm-2">DateCreated</dt>
+            <dd class="col-sm-10">@orderitem.DateCreated</dd>
+            <dt class="col-sm-2">DateUpdated</dt>
+            <dd class="col-sm-10">@orderitem.DateUpdated</dd>
+            <dt class="col-sm-2">CreatedBy</dt>
+            <dd class="col-sm-10">@orderitem.CreatedBy</dd>
+            <dt class="col-sm-2">UpdatedBy</dt>
+            <dd class="col-sm-10">@orderitem.UpdatedBy</dd>
+        </dl>
+        <div>
+            <a href="@($"/orderitems/edit?id={orderitem.Id}")">Edit</a> |
+            <a href="@($"/orderitems")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private OrderItem? orderitem;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        orderitem = await context.OrderItem.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (orderitem is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

@@ -1,0 +1,134 @@
+﻿@page "/grouporders/edit"
+@using Microsoft.EntityFrameworkCore
+@using FoodDelivery.Domain
+@inject IDbContextFactory<Food_Delivery.Data.Food_DeliveryContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>GroupOrder</h2>
+<hr />
+@if (GroupOrder is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="GroupOrder" OnValidSubmit="UpdateGroupOrder" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="GroupOrder.Id" value="@GroupOrder.Id" />
+                <div class="mb-3">
+                    <label for="groupcode" class="form-label">GroupCode:</label>
+                    <InputText id="groupcode" @bind-Value="GroupOrder.GroupCode" class="form-control" />
+                    <ValidationMessage For="() => GroupOrder.GroupCode" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="createdtime" class="form-label">CreatedTime:</label>
+                    <InputDate id="createdtime" @bind-Value="GroupOrder.CreatedTime" class="form-control" />
+                    <ValidationMessage For="() => GroupOrder.CreatedTime" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status:</label>
+                    <InputText id="status" @bind-Value="GroupOrder.Status" class="form-control" />
+                    <ValidationMessage For="() => GroupOrder.Status" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="closedtime" class="form-label">ClosedTime:</label>
+                    <InputDate id="closedtime" @bind-Value="GroupOrder.ClosedTime" class="form-control" />
+                    <ValidationMessage For="() => GroupOrder.ClosedTime" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="mallid" class="form-label">MallId:</label>
+                    <InputNumber id="mallid" @bind-Value="GroupOrder.MallId" class="form-control" />
+                    <ValidationMessage For="() => GroupOrder.MallId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="userid" class="form-label">UserId:</label>
+                    <InputNumber id="userid" @bind-Value="GroupOrder.UserId" class="form-control" />
+                    <ValidationMessage For="() => GroupOrder.UserId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="datecreated" class="form-label">DateCreated:</label>
+                    <InputDate id="datecreated" @bind-Value="GroupOrder.DateCreated" class="form-control" />
+                    <ValidationMessage For="() => GroupOrder.DateCreated" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="dateupdated" class="form-label">DateUpdated:</label>
+                    <InputDate id="dateupdated" @bind-Value="GroupOrder.DateUpdated" class="form-control" />
+                    <ValidationMessage For="() => GroupOrder.DateUpdated" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="createdby" class="form-label">CreatedBy:</label>
+                    <InputText id="createdby" @bind-Value="GroupOrder.CreatedBy" class="form-control" />
+                    <ValidationMessage For="() => GroupOrder.CreatedBy" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="updatedby" class="form-label">UpdatedBy:</label>
+                    <InputText id="updatedby" @bind-Value="GroupOrder.UpdatedBy" class="form-control" />
+                    <ValidationMessage For="() => GroupOrder.UpdatedBy" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/grouporders">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private GroupOrder? GroupOrder { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        GroupOrder ??= await context.GroupOrder.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (GroupOrder is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateGroupOrder()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(GroupOrder!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!GroupOrderExists(GroupOrder!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/grouporders");
+    }
+
+    private bool GroupOrderExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.GroupOrder.Any(e => e.Id == id);
+    }
+}

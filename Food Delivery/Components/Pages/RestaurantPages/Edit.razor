@@ -1,0 +1,129 @@
+﻿@page "/restaurants/edit"
+@using Microsoft.EntityFrameworkCore
+@using FoodDelivery.Domain
+@inject IDbContextFactory<Food_Delivery.Data.Food_DeliveryContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>Restaurant</h2>
+<hr />
+@if (Restaurant is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Restaurant" OnValidSubmit="UpdateRestaurant" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="Restaurant.Id" value="@Restaurant.Id" />
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="Restaurant.Name" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.Name" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="cuisinetype" class="form-label">CuisineType:</label>
+                    <InputText id="cuisinetype" @bind-Value="Restaurant.CuisineType" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.CuisineType" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="operatinghours" class="form-label">OperatingHours:</label>
+                    <InputText id="operatinghours" @bind-Value="Restaurant.OperatingHours" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.OperatingHours" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="locationwithinmall" class="form-label">LocationWithinMall:</label>
+                    <InputText id="locationwithinmall" @bind-Value="Restaurant.LocationWithinMall" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.LocationWithinMall" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="mallid" class="form-label">MallId:</label>
+                    <InputNumber id="mallid" @bind-Value="Restaurant.MallId" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.MallId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="datecreated" class="form-label">DateCreated:</label>
+                    <InputDate id="datecreated" @bind-Value="Restaurant.DateCreated" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.DateCreated" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="dateupdated" class="form-label">DateUpdated:</label>
+                    <InputDate id="dateupdated" @bind-Value="Restaurant.DateUpdated" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.DateUpdated" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="createdby" class="form-label">CreatedBy:</label>
+                    <InputText id="createdby" @bind-Value="Restaurant.CreatedBy" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.CreatedBy" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="updatedby" class="form-label">UpdatedBy:</label>
+                    <InputText id="updatedby" @bind-Value="Restaurant.UpdatedBy" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.UpdatedBy" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/restaurants">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private Restaurant? Restaurant { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Restaurant ??= await context.Restaurant.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Restaurant is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateRestaurant()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Restaurant!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!RestaurantExists(Restaurant!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/restaurants");
+    }
+
+    private bool RestaurantExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Restaurant.Any(e => e.Id == id);
+    }
+}

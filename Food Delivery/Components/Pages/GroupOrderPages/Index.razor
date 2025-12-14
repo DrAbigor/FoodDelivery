@@ -1,0 +1,45 @@
+﻿@page "/grouporders"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using FoodDelivery.Domain
+@using Food_Delivery.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<Food_Delivery.Data.Food_DeliveryContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="grouporders/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.GroupOrder">
+    <PropertyColumn Property="grouporder => grouporder.GroupCode" />
+    <PropertyColumn Property="grouporder => grouporder.CreatedTime" />
+    <PropertyColumn Property="grouporder => grouporder.Status" />
+    <PropertyColumn Property="grouporder => grouporder.ClosedTime" />
+    <PropertyColumn Property="grouporder => grouporder.MallId" />
+    <PropertyColumn Property="grouporder => grouporder.UserId" />
+    <PropertyColumn Property="grouporder => grouporder.DateCreated" />
+    <PropertyColumn Property="grouporder => grouporder.DateUpdated" />
+    <PropertyColumn Property="grouporder => grouporder.CreatedBy" />
+    <PropertyColumn Property="grouporder => grouporder.UpdatedBy" />
+
+    <TemplateColumn Context="grouporder">
+        <a href="@($"grouporders/edit?id={grouporder.Id}")">Edit</a> |
+        <a href="@($"grouporders/details?id={grouporder.Id}")">Details</a> |
+        <a href="@($"grouporders/delete?id={grouporder.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private Food_DeliveryContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

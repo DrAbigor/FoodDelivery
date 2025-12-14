@@ -1,0 +1,84 @@
+﻿@page "/menuitems/create"
+@using Microsoft.EntityFrameworkCore
+@using FoodDelivery.Domain
+@inject IDbContextFactory<Food_Delivery.Data.Food_DeliveryContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>MenuItem</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="MenuItem" OnValidSubmit="AddMenuItem" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="itemname" class="form-label">ItemName:</label> 
+                <InputText id="itemname" @bind-Value="MenuItem.ItemName" class="form-control" /> 
+                <ValidationMessage For="() => MenuItem.ItemName" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="price" class="form-label">Price:</label> 
+                <InputNumber id="price" @bind-Value="MenuItem.Price" class="form-control" /> 
+                <ValidationMessage For="() => MenuItem.Price" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="description" class="form-label">Description:</label> 
+                <InputText id="description" @bind-Value="MenuItem.Description" class="form-control" /> 
+                <ValidationMessage For="() => MenuItem.Description" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="nutritioninfo" class="form-label">NutritionInfo:</label> 
+                <InputText id="nutritioninfo" @bind-Value="MenuItem.NutritionInfo" class="form-control" /> 
+                <ValidationMessage For="() => MenuItem.NutritionInfo" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="restaurantid" class="form-label">RestaurantId:</label> 
+                <InputNumber id="restaurantid" @bind-Value="MenuItem.RestaurantId" class="form-control" /> 
+                <ValidationMessage For="() => MenuItem.RestaurantId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="datecreated" class="form-label">DateCreated:</label> 
+                <InputDate id="datecreated" @bind-Value="MenuItem.DateCreated" class="form-control" /> 
+                <ValidationMessage For="() => MenuItem.DateCreated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="dateupdated" class="form-label">DateUpdated:</label> 
+                <InputDate id="dateupdated" @bind-Value="MenuItem.DateUpdated" class="form-control" /> 
+                <ValidationMessage For="() => MenuItem.DateUpdated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="createdby" class="form-label">CreatedBy:</label> 
+                <InputText id="createdby" @bind-Value="MenuItem.CreatedBy" class="form-control" /> 
+                <ValidationMessage For="() => MenuItem.CreatedBy" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="updatedby" class="form-label">UpdatedBy:</label> 
+                <InputText id="updatedby" @bind-Value="MenuItem.UpdatedBy" class="form-control" /> 
+                <ValidationMessage For="() => MenuItem.UpdatedBy" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/menuitems">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private MenuItem MenuItem { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddMenuItem()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.MenuItem.Add(MenuItem);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/menuitems");
+    }
+}

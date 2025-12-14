@@ -1,0 +1,84 @@
+﻿@page "/restaurants/create"
+@using Microsoft.EntityFrameworkCore
+@using FoodDelivery.Domain
+@inject IDbContextFactory<Food_Delivery.Data.Food_DeliveryContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Restaurant</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Restaurant" OnValidSubmit="AddRestaurant" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label> 
+                <InputText id="name" @bind-Value="Restaurant.Name" class="form-control" /> 
+                <ValidationMessage For="() => Restaurant.Name" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="cuisinetype" class="form-label">CuisineType:</label> 
+                <InputText id="cuisinetype" @bind-Value="Restaurant.CuisineType" class="form-control" /> 
+                <ValidationMessage For="() => Restaurant.CuisineType" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="operatinghours" class="form-label">OperatingHours:</label> 
+                <InputText id="operatinghours" @bind-Value="Restaurant.OperatingHours" class="form-control" /> 
+                <ValidationMessage For="() => Restaurant.OperatingHours" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="locationwithinmall" class="form-label">LocationWithinMall:</label> 
+                <InputText id="locationwithinmall" @bind-Value="Restaurant.LocationWithinMall" class="form-control" /> 
+                <ValidationMessage For="() => Restaurant.LocationWithinMall" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="mallid" class="form-label">MallId:</label> 
+                <InputNumber id="mallid" @bind-Value="Restaurant.MallId" class="form-control" /> 
+                <ValidationMessage For="() => Restaurant.MallId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="datecreated" class="form-label">DateCreated:</label> 
+                <InputDate id="datecreated" @bind-Value="Restaurant.DateCreated" class="form-control" /> 
+                <ValidationMessage For="() => Restaurant.DateCreated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="dateupdated" class="form-label">DateUpdated:</label> 
+                <InputDate id="dateupdated" @bind-Value="Restaurant.DateUpdated" class="form-control" /> 
+                <ValidationMessage For="() => Restaurant.DateUpdated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="createdby" class="form-label">CreatedBy:</label> 
+                <InputText id="createdby" @bind-Value="Restaurant.CreatedBy" class="form-control" /> 
+                <ValidationMessage For="() => Restaurant.CreatedBy" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="updatedby" class="form-label">UpdatedBy:</label> 
+                <InputText id="updatedby" @bind-Value="Restaurant.UpdatedBy" class="form-control" /> 
+                <ValidationMessage For="() => Restaurant.UpdatedBy" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/restaurants">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Restaurant Restaurant { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddRestaurant()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Restaurant.Add(Restaurant);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/restaurants");
+    }
+}

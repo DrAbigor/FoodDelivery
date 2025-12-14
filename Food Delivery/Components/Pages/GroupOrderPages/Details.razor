@@ -1,0 +1,64 @@
+﻿@page "/grouporders/details"
+@using Microsoft.EntityFrameworkCore
+@using FoodDelivery.Domain
+@inject IDbContextFactory<Food_Delivery.Data.Food_DeliveryContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>GroupOrder</h2>
+    <hr />
+    @if (grouporder is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">GroupCode</dt>
+            <dd class="col-sm-10">@grouporder.GroupCode</dd>
+            <dt class="col-sm-2">CreatedTime</dt>
+            <dd class="col-sm-10">@grouporder.CreatedTime</dd>
+            <dt class="col-sm-2">Status</dt>
+            <dd class="col-sm-10">@grouporder.Status</dd>
+            <dt class="col-sm-2">ClosedTime</dt>
+            <dd class="col-sm-10">@grouporder.ClosedTime</dd>
+            <dt class="col-sm-2">MallId</dt>
+            <dd class="col-sm-10">@grouporder.MallId</dd>
+            <dt class="col-sm-2">UserId</dt>
+            <dd class="col-sm-10">@grouporder.UserId</dd>
+            <dt class="col-sm-2">DateCreated</dt>
+            <dd class="col-sm-10">@grouporder.DateCreated</dd>
+            <dt class="col-sm-2">DateUpdated</dt>
+            <dd class="col-sm-10">@grouporder.DateUpdated</dd>
+            <dt class="col-sm-2">CreatedBy</dt>
+            <dd class="col-sm-10">@grouporder.CreatedBy</dd>
+            <dt class="col-sm-2">UpdatedBy</dt>
+            <dd class="col-sm-10">@grouporder.UpdatedBy</dd>
+        </dl>
+        <div>
+            <a href="@($"/grouporders/edit?id={grouporder.Id}")">Edit</a> |
+            <a href="@($"/grouporders")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private GroupOrder? grouporder;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        grouporder = await context.GroupOrder.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (grouporder is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
