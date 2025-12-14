@@ -1,0 +1,123 @@
+/* ========== BASE ========== */
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #f6f6f7;
+    color: #222;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* ========== APP SHELL ========== */
+.app-shell {
+    min-height: 100vh;
+    background: #f6f6f7;
+}
+
+/* ========== TOP BAR (LIKE YOUR 2ND PIC) ========== */
+.topbar {
+    height: 68px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* Brand */
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-mark {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    color: #f08a2a;
+    background: rgba(240, 138, 42, 0.12);
+}
+
+.brand-text {
+    font-weight: 700;
+    color: #f08a2a;
+}
+
+/* Center nav links */
+.topnav {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+}
+
+.topnav-link {
+    color: #6b7280;
+    font-weight: 500;
+    padding: 6px 4px;
+}
+
+    .topnav-link.active {
+        color: #f08a2a;
+        font-weight: 700;
+    }
+
+/* Right icons */
+.topicons {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.iconbtn {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    background: #f3f4f6;
+    color: #111827;
+    display: grid;
+    place-items: center;
+}
+
+    .iconbtn:hover {
+        filter: brightness(0.97);
+    }
+
+.badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #f08a2a;
+    color: #fff;
+    border-radius: 999px;
+    font-size: 12px;
+    padding: 2px 7px;
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+/* Main content */
+.app-content {
+    padding: 0;
+}
+
+/* Mobile: hide center nav */
+@media (max-width: 768px) {
+    .topnav {
+        display: none;
+    }
+}

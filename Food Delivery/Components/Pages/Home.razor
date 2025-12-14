@@ -1,0 +1,122 @@
+﻿@page "/"
+
+<div class="landing">
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-inner">
+
+            <div class="deliver-row">
+                <span class="pin">📍</span>
+                <span class="deliver-label">Delivering to:</span>
+                <button class="deliver-pill">@SelectedLocation ▾</button>
+            </div>
+
+            <h1 class="hero-title">Welcome to Food Delivery</h1>
+            <p class="hero-subtitle">
+                Discover your favorite meals from the best restaurants in town
+            </p>
+
+            <div class="search-wrap">
+                <span class="search-icon">🔍</span>
+                <input class="search-input"
+                       placeholder="Search for food or restaurants..."
+                       @bind="SearchText" />
+            </div>
+        </div>
+    </section>
+
+    <!-- CATEGORY PILLS -->
+    <section class="cats">
+        <div class="cats-row">
+            @foreach (var c in Categories)
+            {
+                <button class="cat-pill">
+                    <span class="cat-emoji">@c.Icon</span>
+                    <span>@c.Name</span>
+                </button>
+            }
+        </div>
+    </section>
+
+    <!-- PROMOS -->
+    <section class="promos">
+        <div class="promo-grid">
+            <div class="promo-card promo-orange">
+                🔥 20% Off Selected Restaurants<br />
+                <small>Use code <b>SAVE20</b> at checkout</small>
+            </div>
+
+            <div class="promo-card promo-purple">
+                🚚 Free Delivery for Orders above $15<br />
+                <small>Limited time offer</small>
+            </div>
+
+            <div class="promo-card promo-green">
+                ⭐ Weekend Specials<br />
+                <small>Get exclusive deals this weekend</small>
+            </div>
+        </div>
+    </section>
+
+    <!-- POPULAR RESTAURANTS -->
+    <section class="popular">
+        <div class="popular-inner">
+            <h3 class="section-title">Popular Restaurants</h3>
+
+            <div class="rest-grid">
+                @foreach (var r in PopularRestaurants)
+                {
+                    <div class="rest-card">
+                        <img src="@r.ImageUrl" alt="@r.Name" />
+
+                        <div class="rest-body">
+                            <div class="rest-name">@r.Name</div>
+                            <div class="rest-rating">⭐ @r.Rating</div>
+                        </div>
+
+                        <button class="view-menu">View Menu</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="cta-inner">
+            <h4>Order Now – Fast, Easy and Convenient</h4>
+            <p>
+                Get your favorite food delivered to your doorstep in minutes.
+                Fresh, hot, and delicious!
+            </p>
+            <button class="cta-btn">Start Ordering</button>
+        </div>
+    </section>
+
+</div>
+
+@code {
+    string SelectedLocation = "Pasir Ris, Singapore";
+    string SearchText = "";
+
+    List<(string Name, string Icon)> Categories = new()
+    {
+        ("Western", "🍔"),
+        ("Asian", "🥢"),
+        ("Healthy", "🥗"),
+        ("Drinks", "🧋"),
+        ("Japanese", "🍣"),
+        ("Dessert", "🍰"),
+    };
+
+    List<(string Name, string Rating, string ImageUrl)> PopularRestaurants = new()
+    {
+        ("Bella Italia", "4.8", "/images/pasta.jpg"),
+        ("Pizza Paradise", "4.6", "/images/pizza.jpg"),
+        ("Burger Boss", "4.7", "/images/burger.jpg"),
+        ("Sushi Sensation", "4.9", "/images/sushi.jpg"),
+        ("Taco Fiesta", "4.5", "/images/taco.jpg"),
+        ("Gourmet Bistro", "4.8", "/images/bistro.jpg"),
+    };
+}

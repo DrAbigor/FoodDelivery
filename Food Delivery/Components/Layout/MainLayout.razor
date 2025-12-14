@@ -1,0 +1,49 @@
+﻿@inherits LayoutComponentBase
+
+<div class="app-shell">
+    <header class="topbar">
+        <!-- Left: Logo -->
+        <a class="brand" href="/">
+            <span class="brand-mark">
+                <i class="bi bi-tools"></i>
+            </span>
+            <span class="brand-text">Food Delivery</span>
+        </a>
+
+        <!-- Center: Links -->
+        <nav class="topnav">
+            <a class="topnav-link @(IsActive("/") ? "active" : "")" href="/">Home</a>
+            <a class="topnav-link @(IsActive("/restaurants") ? "active" : "")" href="/restaurants">Restaurants</a>
+            <a class="topnav-link @(IsActive("/group-orders") ? "active" : "")" href="/group-orders">Group Orders</a>
+            <a class="topnav-link @(IsActive("/profile") ? "active" : "")" href="/profile">Profile</a>
+        </nav>
+
+        <!-- Right: Icons -->
+        <div class="topicons">
+            <a class="iconbtn" href="/profile" title="Profile">
+                <i class="bi bi-person"></i>
+            </a>
+
+            <a class="iconbtn" href="/cart" title="Cart">
+                <i class="bi bi-cart3"></i>
+                <span class="badge">3</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="app-content">
+        @Body
+    </main>
+</div>
+
+@code {
+    [Inject] private NavigationManager Nav { get; set; } = default!;
+
+    private bool IsActive(string path)
+    {
+        var current = Nav.ToBaseRelativePath(Nav.Uri);
+        var currentPath = "/" + current.Trim('/');
+        if (currentPath == "/") return path == "/";
+        return currentPath.StartsWith(path, StringComparison.OrdinalIgnoreCase);
+    }
+}
