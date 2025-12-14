@@ -1,0 +1,58 @@
+﻿@page "/login"
+
+@inject Food_Delivery.Services.AuthState Auth
+@inject NavigationManager Nav
+
+<h2 class="auth-title">Login</h2>
+
+<div class="auth-card">
+    <EditForm Model="@model" OnValidSubmit="HandleLogin">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <label class="auth-label">Email</label>
+        <InputText class="auth-input"
+                   @bind-Value="model.Email" />
+
+        <label class="auth-label">Password</label>
+        <InputText class="auth-input"
+                   type="password"
+                   @bind-Value="model.Password" />
+
+        <button class="auth-btn" type="submit">
+            Login
+        </button>
+
+        <p class="auth-muted">
+            Don’t have an account?
+            <a class="auth-link" href="/register">Sign up</a>
+        </p>
+
+        @if (!string.IsNullOrEmpty(Message))
+        {
+            <div class="auth-msg">@Message</div>
+        }
+    </EditForm>
+</div>
+
+@code {
+    private LoginModel model = new();
+    private string Message = "";
+
+    private void HandleLogin()
+    {
+        Auth.Login();               // mark user as logged in
+        Nav.NavigateTo("/profile"); // go to profile after login
+    }
+
+
+    private class LoginModel
+    {
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.EmailAddress]
+        public string Email { get; set; } = "";
+
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Password { get; set; } = "";
+    }
+}

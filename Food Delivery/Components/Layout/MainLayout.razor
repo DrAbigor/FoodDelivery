@@ -1,49 +1,65 @@
 ﻿@inherits LayoutComponentBase
 
+@inject Food_Delivery.Services.AuthState Auth
+@inject NavigationManager Nav
+
 <div class="app-shell">
+
+    <!-- TOP NAVBAR -->
     <header class="topbar">
-        <!-- Left: Logo -->
+
+        <!-- LEFT: BRAND -->
         <a class="brand" href="/">
             <span class="brand-mark">
-                <i class="bi bi-tools"></i>
+                <i class="bi bi-shop"></i>
             </span>
             <span class="brand-text">Food Delivery</span>
         </a>
 
-        <!-- Center: Links -->
+        <!-- CENTER: NAV LINKS -->
         <nav class="topnav">
             <a class="topnav-link @(IsActive("/") ? "active" : "")" href="/">Home</a>
             <a class="topnav-link @(IsActive("/restaurants") ? "active" : "")" href="/restaurants">Restaurants</a>
             <a class="topnav-link @(IsActive("/group-orders") ? "active" : "")" href="/group-orders">Group Orders</a>
-            <a class="topnav-link @(IsActive("/profile") ? "active" : "")" href="/profile">Profile</a>
         </nav>
 
-        <!-- Right: Icons -->
+        <!-- RIGHT: ICONS -->
         <div class="topicons">
-            <a class="iconbtn" href="/profile" title="Profile">
+
+            <!-- PROFILE ICON (ALWAYS VISIBLE) -->
+            <a class="iconbtn" href="@ProfileLink" title="Profile">
                 <i class="bi bi-person"></i>
             </a>
 
+            <!-- CART ICON -->
             <a class="iconbtn" href="/cart" title="Cart">
                 <i class="bi bi-cart3"></i>
                 <span class="badge">3</span>
             </a>
+
         </div>
+
     </header>
 
+    <!-- PAGE CONTENT -->
     <main class="app-content">
         @Body
     </main>
+
 </div>
 
 @code {
-    [Inject] private NavigationManager Nav { get; set; } = default!;
+    private string ProfileLink => Auth.IsLoggedIn ? "/profile" : "/login";
 
     private bool IsActive(string path)
     {
         var current = Nav.ToBaseRelativePath(Nav.Uri);
         var currentPath = "/" + current.Trim('/');
-        if (currentPath == "/") return path == "/";
+
+        if (path == "/")
+            return currentPath == "/";
+
         return currentPath.StartsWith(path, StringComparison.OrdinalIgnoreCase);
     }
 }
+

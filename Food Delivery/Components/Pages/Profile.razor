@@ -1,0 +1,33 @@
+﻿@page "/profile"
+@inject Food_Delivery.Services.AuthState Auth
+@inject NavigationManager Nav
+
+@if (!Auth.IsLoggedIn)
+{
+    <p>Redirecting to login...</p>
+}
+else
+{
+    <h2>My Profile</h2>
+    <p>Welcome! You are logged in.</p>
+
+    <button class="auth-btn" @onclick="Logout">
+        Logout
+    </button>
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        if (!Auth.IsLoggedIn)
+        {
+            Nav.NavigateTo("/login");
+        }
+    }
+
+    private void Logout()
+    {
+        Auth.Logout();
+        Nav.NavigateTo("/");
+    }
+}

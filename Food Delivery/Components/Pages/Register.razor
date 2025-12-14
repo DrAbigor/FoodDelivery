@@ -1,0 +1,68 @@
+﻿@page "/register"
+
+<h2 class="auth-title">Sign Up</h2>
+
+<div class="auth-card">
+    <EditForm Model="@model" OnValidSubmit="HandleRegister">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <label class="auth-label">Email</label>
+        <InputText class="auth-input"
+                   @bind-Value="model.Email" />
+
+        <label class="auth-label">Password</label>
+        <InputText class="auth-input"
+                   type="password"
+                   @bind-Value="model.Password" />
+
+        <label class="auth-label">Confirm Password</label>
+        <InputText class="auth-input"
+                   type="password"
+                   @bind-Value="model.ConfirmPassword" />
+
+        <button class="auth-btn" type="submit">
+            Create Account
+        </button>
+
+        <p class="auth-muted">
+            Already have an account?
+            <a class="auth-link" href="/login">Login</a>
+        </p>
+
+        @if (!string.IsNullOrEmpty(Message))
+        {
+            <div class="auth-msg">@Message</div>
+        }
+    </EditForm>
+</div>
+
+@code {
+    private RegisterModel model = new();
+    private string Message = "";
+
+    private void HandleRegister()
+    {
+        // UI-only validation (no database yet)
+        if (model.Password != model.ConfirmPassword)
+        {
+            Message = "❌ Passwords do not match.";
+            return;
+        }
+
+        Message = "✅ Sign Up page works (not connected to database yet).";
+    }
+
+    private class RegisterModel
+    {
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.EmailAddress]
+        public string Email { get; set; } = "";
+
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Password { get; set; } = "";
+
+        [System.ComponentModel.DataAnnotations.Required]
+        public string ConfirmPassword { get; set; } = "";
+    }
+}
