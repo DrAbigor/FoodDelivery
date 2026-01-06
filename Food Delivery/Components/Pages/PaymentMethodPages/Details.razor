@@ -52,7 +52,7 @@
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        paymentmethod = await context.PaymentMethod.FirstOrDefaultAsync(m => m.Id == Id);
+        paymentmethod = await context.PaymentMethods.FirstOrDefaultAsync(m => m.Id == Id);
 
         if (paymentmethod is null)
         {

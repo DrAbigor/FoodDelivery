@@ -9,15 +9,15 @@ namespace Food_Delivery.Data
 {
     public class Food_DeliveryContext : DbContext
     {
-        public Food_DeliveryContext (DbContextOptions<Food_DeliveryContext> options)
+        public Food_DeliveryContext(DbContextOptions<Food_DeliveryContext> options)
             : base(options)
         {
         }
 
         public DbSet<FoodDelivery.Domain.User> User { get; set; } = default!;
         public DbSet<FoodDelivery.Domain.Restaurant> Restaurant { get; set; } = default!;
-        public DbSet<FoodDelivery.Domain.PaymentMethod> PaymentMethod { get; set; } = default!;
-        public DbSet<FoodDelivery.Domain.Payment> Payment { get; set; } = default!;
+        public DbSet<FoodDelivery.Domain.PaymentMethod> PaymentMethods { get; set; } = default!;
+        public DbSet<FoodDelivery.Domain.Payment> Payments { get; set; } = default!;
         public DbSet<FoodDelivery.Domain.OrderItem> OrderItem { get; set; } = default!;
         public DbSet<FoodDelivery.Domain.Order> Order { get; set; } = default!;
         public DbSet<FoodDelivery.Domain.MenuItem> MenuItem { get; set; } = default!;

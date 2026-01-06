@@ -77,7 +77,7 @@
     private async Task AddPayment()
     {
         using var context = DbFactory.CreateDbContext();
-        context.Payment.Add(Payment);
+        context.Payments.Add(Payment);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/payments");
     }

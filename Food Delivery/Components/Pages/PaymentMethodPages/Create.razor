@@ -77,7 +77,7 @@
     private async Task AddPaymentMethod()
     {
         using var context = DbFactory.CreateDbContext();
-        context.PaymentMethod.Add(PaymentMethod);
+        context.PaymentMethods.Add(PaymentMethod);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/paymentmethods");
     }

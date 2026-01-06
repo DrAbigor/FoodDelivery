@@ -69,7 +69,7 @@
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        payment = await context.Payment.FirstOrDefaultAsync(m => m.Id == Id);
+        payment = await context.Payments.FirstOrDefaultAsync(m => m.Id == Id);
 
         if (payment is null)
         {
@@ -80,7 +80,7 @@
     private async Task DeletePayment()
     {
         using var context = DbFactory.CreateDbContext();
-        context.Payment.Remove(payment!);
+        context.Payments.Remove(payment!);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/payments");
     }

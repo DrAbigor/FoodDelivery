@@ -87,7 +87,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        PaymentMethod ??= await context.PaymentMethod.FirstOrDefaultAsync(m => m.Id == Id);
+        PaymentMethod ??= await context.PaymentMethods.FirstOrDefaultAsync(m => m.Id == Id);
 
         if (PaymentMethod is null)
         {
@@ -124,6 +124,6 @@ else
     private bool PaymentMethodExists(int id)
     {
         using var context = DbFactory.CreateDbContext();
-        return context.PaymentMethod.Any(e => e.Id == id);
+        return context.PaymentMethods.Any(e => e.Id == id);
     }
 }
